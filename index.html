@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primeiro App React</title>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    function Button() {
+      return <button>Clique aqui</button>
+    }
+
+    function Input() {
+      return <input type="text" placeholder="Digite seu nome" />
+    }
+
+    function App() {
+      return (
+        <div>
+          <Button />
+          <Input />
+        </div>
+      )
+    }
+    // JSX - JavaScript XML
+    const app = document.getElementById("app");
+    const root = ReactDOM.createRoot(app);
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
