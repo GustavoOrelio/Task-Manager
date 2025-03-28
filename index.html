@@ -15,35 +15,50 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-    function Header(props) {
-      return <h1 className="header">{props.children}</h1>
+    class Header extends React.Component {
+      render() {
+        return <h1 className="header">{this.props.children}</h1>
+      }
     }
 
-    function App() {
-      const [message, setMessage] = React.useState(["Tarefa 1", "Tarefa 2", "Tarefa 3"])
-      const [inputValue, setInputValue] = React.useState("")
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          inputValue: "",
+          tarefas: ["Tarefa 1", "Tarefa 2", "Tarefa 3"]
+        }
 
-      function handleButtonClick() {
-        setMessage([...message, inputValue]);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleAddTaskClick = this.handleAddTaskClick.bind(this);
       }
 
-      return (
-        <div>
+      handleInputChange(e) {
+        this.setState({ inputValue: e.target.value })
+      }
+
+      handleAddTaskClick() {
+        this.setState({ tarefas: [...this.state.tarefas, this.state.inputValue] })
+      }
+
+      render() {
+        return <div>
           <Header>Adicionar Tarefa</Header>
 
-          <input type="text" placeholder="Digite sua tarefa" value={inputValue} className="input" onChange={(e) => { setInputValue(e.target.value) }} />
+          <input type="text" placeholder="Digite sua tarefa" value={this.state.inputValue} className="input" onChange={(e) => { this.handleInputChange(e) }} />
 
-          <button className="button" onClick={() => { handleButtonClick() }}>Adicionar Tarefa</button>
+          <button className="button" onClick={() => { this.handleAddTaskClick() }}>Adicionar Tarefa</button>
 
           <Header>Minhas Tarefas</Header>
           <ul>
-            {message.map((item) => {
+            {this.state.tarefas.map((item) => {
               return <li>{item}</li>
             })}
           </ul>
         </div>
-      )
+      }
     }
+
     // JSX - JavaScript XML
     const app = document.getElementById("app");
     const root = ReactDOM.createRoot(app);
