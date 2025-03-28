@@ -15,25 +15,32 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-    function Button() {
-      return <button className="button">Clique aqui</button>
-    }
-
-    function Input() {
-      return <input type="text" placeholder="Digite sua tarefa" className="input" />
-    }
-
     function Header(props) {
       return <h1 className="header">{props.children}</h1>
     }
 
     function App() {
+      const [message, setMessage] = React.useState(["Tarefa 1", "Tarefa 2", "Tarefa 3"])
+      const [inputValue, setInputValue] = React.useState("")
+
+      function handleButtonClick() {
+        setMessage([...message, inputValue]);
+      }
+
       return (
-        <div id="app-example">
+        <div>
+          <Header>Adicionar Tarefa</Header>
+
+          <input type="text" placeholder="Digite sua tarefa" value={inputValue} className="input" onChange={(e) => { setInputValue(e.target.value) }} />
+
+          <button className="button" onClick={() => { handleButtonClick() }}>Adicionar Tarefa</button>
+
           <Header>Minhas Tarefas</Header>
-          <Button />
-          <Input />
-          <Header>Sobre</Header>
+          <ul>
+            {message.map((item) => {
+              return <li>{item}</li>
+            })}
+          </ul>
         </div>
       )
     }
