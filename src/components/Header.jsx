@@ -1,9 +1,5 @@
-function Header() {
-  return (
-    <div>
-      <h1>Header</h1>
-    </div>
-  );
+function Header(props) {
+  return <header className="header">{props.children}</header>;
 }
 
 export default Header;

@@ -1,13 +1,5 @@
-import Header from "./components/Header";
-import Task from "./components/Task";
+import Tasks from "./components/Tasks";
 
-function App() {
-  return (
-    <div>
-      <Header />
-      <Task />
-    </div>
-  );
+export default function App() {
+  return <Tasks />;
 }
-
-export default App;
