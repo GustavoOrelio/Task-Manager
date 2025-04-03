@@ -5,52 +5,55 @@ import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { CSSTransition } from "react-transition-group";
+import { toast } from "sonner";
 import { v4 } from "uuid";
 
 import { LoaderIcon } from "../assets/icons";
+import { useAddTask } from "../hooks/data/use-add-task";
 import Button from "./Button";
 import Input from "./Input";
 import TimeSelect from "./TimeSelect";
 
-const AddTaskDialog = ({
-  isOpen,
-  handleClose,
-  onSubmitSuccess,
-  onSubmitError,
-}) => {
+const AddTaskDialog = ({ isOpen, handleClose }) => {
+  const { mutate: addTask } = useAddTask();
   const {
     register,
-    handleSubmit,
     formState: { errors, isSubmitting },
+    handleSubmit,
     reset,
-  } = useForm();
-
-  const nodeRef = useRef();
-
-  const handleSaveClick = async (data) => {
-    const task = {
-      id: v4(),
-      title: data.title.trim(),
-      time: data.time,
-      description: data.description.trim(),
-      status: "not_started",
-    };
-
-    const response = await fetch("http://localhost:3000/tasks", {
-      method: "POST",
-      body: JSON.stringify(task),
-    });
-    if (!response.ok) {
-      return onSubmitError();
-    }
-
-    onSubmitSuccess(task);
-    handleClose();
-    reset({
+  } = useForm({
+    defaultValues: {
       title: "",
       time: "morning",
       description: "",
-    });
+    },
+  });
+  const nodeRef = useRef();
+
+  const handleSaveClick = async (data) => {
+    addTask(
+      {
+        id: v4(),
+        title: data.title.trim(),
+        time: data.time,
+        description: data.description.trim(),
+        status: "not_started",
+      },
+      {
+        onSuccess: () => {
+          handleClose();
+          reset({
+            title: "",
+            time: "morning",
+            description: "",
+          });
+          toast.success("Tarefa adicionada com sucesso!");
+        },
+        onError: () => {
+          toast.error("Erro ao adicionar tarefa. Por favor, tente novamente.");
+        },
+      }
+    );
   };
 
   const handleCancelClick = () => {
@@ -94,30 +97,22 @@ const AddTaskDialog = ({
                   label="Título"
                   placeholder="Insira o título da tarefa"
                   errorMessage={errors?.title?.message}
+                  disabled={isSubmitting}
                   {...register("title", {
-                    required: "Título é obrigatório",
+                    required: "O título é obrigatório.",
                     validate: (value) => {
                       if (!value.trim()) {
-                        return "O título não pode ser vazio";
+                        return "O título não pode ser vazio.";
                       }
                       return true;
                     },
                   })}
-                  disabled={isSubmitting}
                 />
 
                 <TimeSelect
-                  errorMessage={errors?.time?.message}
-                  {...register("time", {
-                    required: "Horário é obrigatório",
-                    validate: (value) => {
-                      if (!value.trim()) {
-                        return "O horário não pode ser vazio";
-                      }
-                      return true;
-                    },
-                  })}
                   disabled={isSubmitting}
+                  errorMessage={errors?.time?.message}
+                  {...register("time", { required: true })}
                 />
 
                 <Input
@@ -125,16 +120,16 @@ const AddTaskDialog = ({
                   label="Descrição"
                   placeholder="Descreva a tarefa"
                   errorMessage={errors?.description?.message}
+                  disabled={isSubmitting}
                   {...register("description", {
-                    required: "Descrição é obrigatória",
+                    required: "A descrição é obrigatória.",
                     validate: (value) => {
                       if (!value.trim()) {
-                        return "A descrição não pode ser vazia";
+                        return "A descrição não pode ser vazia.";
                       }
                       return true;
                     },
                   })}
-                  disabled={isSubmitting}
                 />
 
                 <div className="flex gap-3">
@@ -150,8 +145,8 @@ const AddTaskDialog = ({
                   <Button
                     size="large"
                     className="w-full"
-                    type="submit"
                     disabled={isSubmitting}
+                    type="submit"
                   >
                     {isSubmitting && <LoaderIcon className="animate-spin" />}
                     Salvar
