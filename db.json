@@ -12,14 +12,14 @@
       "title": "Teste 2",
       "time": "afternoon",
       "description": "Teste 2",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "b70f0086-891b-4233-b481-a61ab7f7e875",
       "title": "Teste 3",
       "time": "evening",
       "description": "Testeeee 3",
-      "status": "done"
+      "status": "in_progress"
     }
   ]
 }
