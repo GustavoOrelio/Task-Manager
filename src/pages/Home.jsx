@@ -12,9 +12,7 @@ import { useGetTasks } from "../hooks/data/use-get-tasks";
 const HomePage = () => {
   const { data: tasks } = useGetTasks();
 
-  const completedTasks = tasks?.filter(
-    (task) => task.status === "completed"
-  ).length;
+  const doneTasks = tasks?.filter((task) => task.status === "done").length;
   const inProgressTasks = tasks?.filter(
     (task) => task.status === "in_progress"
   ).length;
@@ -33,7 +31,7 @@ const HomePage = () => {
 
           <DashboardCard
             icon={<TasksIcon />}
-            mainText={completedTasks}
+            mainText={doneTasks}
             secondaryText="Tarefas Concluídas"
           />
 
